@@ -183,27 +183,41 @@ helm repo list
 
 1.	Let's use Helm to create a simple, default chart one that will spin up an nginx deployment.
 
-$ helm create sample-chart
+```
+helm create sample-chart
+```
+
 2.	Let's see what Helm created in terms of the structure of files and directories.  Use "tree" if running in the VM or if you have the "tree" utility installed. Otherwise, you can use the "ls" command
 
-$ tree sample-chart
+```
+tree sample-chart
+```
+
 or
-$ ls -R sample-chart
-3.	Now take a look at some of the main files in the new chart.
 
-$ cd sample-chart
-$ cat Chart.yaml
-$ cat values.yaml
-$ cat templates/deployment.yaml
-$ cat templates/service.yaml
+```
+ls -R sample-chart
+```
 
-4.	Take a look at how Helm would render files in this chart.
+3. Now take a look at some of the main files in the new chart. You can select each of the files to look at them.
 
-$ helm template --debug . | head -n 50
+Select [**sample-chart/Chart.yaml**](./sample-chart/Chart.yaml) to open it.
+Select [**sample-chart/values.yaml**](./sample-chart/values.yaml) to open it.
+Select [**sample-chart/templates/deployment.yaml**](./sample-chart/templates/deployment.yaml) to open it.
+Select [**sample-chart/templates/service.yaml**](./sample-chart/templates/service.yaml) to open it.
 
-5.	Go ahead and install the chart.
 
-$ helm install sample .
+4.  Take a look at how Helm would render files in this chart.
+
+```
+helm template --debug . | head -n 50
+```
+
+5. Go ahead and install the chart.
+
+```
+helm install sample .
+```
 
 You will see some output like this:
 NAME: sample
@@ -217,28 +231,40 @@ NOTES:
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace default port-forward $POD_NAME 8080:80
 
-6.	If you do a helm list command, you'll see that the chart was deployed in the "default" namespace (alongside our chart-museum one) and note that it is release version 1. You can also see the Kubernetes objects that were deployed in the default namespace for this.
+6.  If you do a helm list command, you'll see that the chart was deployed in the "default" namespace (alongside our chart-museum one) and note that it is release version 1. You can also see the Kubernetes objects that were deployed in the default namespace for this.
 
-$ helm list
-$ k get all | grep sample
+```
+helm list
+k get all | grep sample
+```
 
-7.	Take a look at the rendered templates that got deployed into the cluster.
+7. Take a look at the rendered templates that got deployed into the cluster.
 
-$ helm get manifest sample | head -n 50
+```
+helm get manifest sample | head -n 50
+```
+
 This should look very similar to the output from the template command that was issued earlier.
 
-8.	You may have noticed earlier that this chart had a test built into it.  Let's run the test now.  Note the output and also note the pods that are there afterwards.  Then take a look at the definition of the test afterward and see if you can understand how it all ties together.
+8. You may have noticed earlier that this chart had a test built into it.  Let's run the test now.  Note the output and also note the pods that are there afterwards.  Then take a look at the definition of the test afterward and see if you can understand how it all ties together.
 
-$ helm test sample
-$ k get pods
-$ cat templates/tests/test-connection.yaml
+```
+helm test sample
+k get pods
+cat templates/tests/test-connection.yaml
+```
+ 
+9. We're done with this release now, so we can delete it.
 
-9.	We're done with this release now, so we can delete it.
+```
+helm delete sample
+```
+10. Look at the objects in the default namespace to see that the sample ones were removed.  You may see a leftover test pod that did not get removed.  If so, use the second command below to remove it.
 
-$ helm delete sample
-10.	 Look at the objects in the default namespace to see that the sample ones were removed.  You may see a leftover test pod that did not get removed.  If so, use the second command below to remove it.
-$ k get all | grep sample
-$ k delete pod/<sample-pod-name>
+```
+k get all | grep sample
+k delete pod/<sample-pod-name>
+```
 
 <p align="center">
 **[END OF LAB]**
@@ -247,21 +273,22 @@ $ k delete pod/<sample-pod-name>
 **Lab 4: Charts and Dependencies**
 **Purpose:  In this lab, we’ll deploy the chart for our sample webapp, and then see how to add another chart as a dependency for its database.**
 
-1.	Go to the main directory for our helm work and switch to the quay.io branch.  You can optionally look at any of the files you're interested in.
+1. Go to the main directory for our helm work and switch to the quay.io branch.  You can optionally look at any of the files you're interested in.
 
-$ cd ~/helm-ws
+```
+cd ~/helm-ws
+git stash
+git checkout quay.io
+cat <files of interest>
+```
 
-$ git stash
+2. Create a namespace for the app to run in and then deploy it via Helm
 
-$ git checkout quay.io
-
-$ cat <files of interest>
-
-2.	Create a namespace for the app to run in and then deploy it via Helm
-
-$ kubectl create ns roar
-$ cd roar-web
-$ helm install -n roar roar .
+```
+kubectl create ns roar
+cd roar-web
+helm install -n roar roar .
+```
 
 Afterwards you should see a set of output like the following:
 NAME: roar
@@ -271,9 +298,12 @@ STATUS: deployed
 REVISION: 1
 TEST SUITE: None
 
-3.	Take a look at the release that has been installed in the namespace. 
+3. Take a look at the release that has been installed in the namespace. 
 
-$ helm list -n roar
+```
+helm list -n roar
+```
+
 You should see output like the following:
 NAME    NAMESPACE       REVISION        UPDATED                                STATUS   CHART           APP VERSION
 roar    roar            1               2022-06-20 21:21:47.8781047 -0400 EDT  deployed roar-web-0.1.0
@@ -281,69 +311,68 @@ roar    roar            1               2022-06-20 21:21:47.8781047 -0400 EDT  d
  
 Now look at the resources that are installed in the namespace.
 
-$ k get all -n roar
+```
+k get all -n roar
+```
 
-4.	Find the nodeport where the app is running.  
+4. Find the nodeport where the app is running.  
 
-$ k get svc -n roar   
-              Look for the NodePort setting in the service output (should be a number > 30000 after "8089:")
+```
+k get svc -n roar   
+```
 
-5.	If NOT running in the VM, forward the port from step 4 to 8080 on the host machine.  You can use the provided script below to do this.
-$ ../extra/roar-port.sh roar <nodeport from step 4>   
+Look for the NodePort setting in the service output (should be a number > 30000 after "8089:")
 
-        6. In a browser, go to  http://localhost:<NodePort>/roar/
+5. If NOT running in the VM, forward the port from step 4 to 8080 on the host machine.  You can use the provided script below to do this.
+
+```
+../extra/roar-port.sh roar <nodeport from step 4>   
+```
+
+6. In a browser, go to  http://localhost:<NodePort>/roar/
 	You should see something like this:
  
 
-7.	Notice that we see our webapp, but there is no data in the table.  This is because we don't have our database deployed and being pulled in. We have a database chart and resources on our local system. Let's see how to get it pulled in as a dependency.  First, change into the directory for the database pieces.  Again, you can look at any files of interest in there.
+7. Notice that we see our webapp, but there is no data in the table.  This is because we don't have our database deployed and being pulled in. We have a database chart and resources on our local system. Let's see how to get it pulled in as a dependency.  First, change into the directory for the database pieces.  Again, you can look at any files of interest in there.
 
-$ cd ~/helm-ws/roar-db
+```
+cd ~/helm-ws/roar-db
+cat <files of interest>
+```
 
-$ cat <files of interest>
+8. We want to package this up so it can be used as a dependency for our web chart. Go ahead and run the command to package it up. You should be in the roar-db subdirectory still.
 
-8.	We want to package this up so it can be used as a dependency for our web chart. Go ahead and run the command to package it up. You should be in the roar-db subdirectory still.
-
-$ helm package . 
+```
+helm package . 
+```
 
 For output, you should see something like this:
 Successfully packaged chart and saved it to: /home/diyuser3/helm-ws/roar-db/roar-db-0.1.0.tgz
 
-9.  Upload the newly created package to our ChartMuseum instance. (This command is also in the file commands.txt in the extra subdirectory -   ~/helm-ws/extra/commands.txt )
+9. Upload the newly created package to our ChartMuseum instance. (This command is also in the file commands.txt in the extra subdirectory -   ~/helm-ws/extra/commands.txt )
 
-$ curl --data-binary "@roar-db-0.1.0.tgz"  http://localhost:31000/api/charts
+```
+curl --data-binary "@roar-db-0.1.0.tgz"  http://localhost:31000/api/charts
+```
 When done, you should see output like this:
 {"saved":true}
 
-10. Now that we have this package stored in our chart repository, we can add it as a dependency into our webapp's chart so it will have data to display.  To do that, we add it to the Chart.yaml file.
+10. Now that we have this package stored in our chart repository, we can add it as a dependency into our webapp's chart so it will have data to display.  To do that, we add it to the Chart.yaml file.  We have a before and after version of the file. Diff the two files with the code diff tool to see the differences.
 
-- Either -
+```
+code -d extra/Chart.yaml roar-web/Chart.yaml
+```
 
-	$ cd ~/helm-ws/roar-web
-	$ meld Chart.yaml ../extra/Chart.yaml (then merge via arrow in red and save)
+11. Now we'll update our Chart.yaml file with the needed changes.  To save trying to get the yaml all correct in a regular editor, we’ll just use the diff tool’s merging ability. In the diff window, between the two files, click the arrow that points right to replace the code in our roar-web/Chart.yaml file with the new code from extra/Chart.yaml.  (In the figure below, this is the arrow that is circled and labelled "1".) After that, the files should be identical and you can close the diff window (circled "2" in the figure below).
 
- 
--OR-
+![Diff and merge in code](./images/helmfun7.png?raw=true "Diffing and merging for dependent chart")
 
+	
+12. Now, update your dependencies.
 
-$ cd ~/helm-ws/roar-web
-$ gedit Chart.yaml 
-
-Add the lines in bold below (the dependencies section)  - this would have been handled with a requirements.yaml in an earlier version of Helm.  Pay attention to the alignment.
-
-
-apiVersion: v2
-description: Helm chart for roar-web instance
-name: roar-web
-version: 0.1.0
-dependencies:
-- name: roar-db  
-  version: 0.1.0
-  repository: http://localhost:31000
-
-
-11. Save your changes to the Chart.yaml file, close the editor and update dependencies.
-
-$ helm dep up
+```
+helm dep up
+```
 You should see output like this as Helm gets your new dependency:
 Hang tight while we grab the latest from your chart repositories...
 ...Successfully got an update from the "local" chart repository
@@ -354,23 +383,31 @@ Saving 1 charts
 Downloading roar-db from repo http://localhost:31000
 Deleting outdated charts
 
-12.  If you look at the directory structure now, you'll have a new "charts" directory where the tgz file will be. With our new dependency in place, let's remind ourselves what is out there now and then go ahead and upgrade our webapp release.
+13.  If you look at the directory structure now, you'll have a new "charts" directory where the tgz file will be. With our new dependency in place, let's remind ourselves what is out there now and then go ahead and upgrade our webapp release.
 
-        $ ls charts
-   $ helm list -n roar
-   $ k get all -n roar
-         $ helm upgrade -n roar roar  .  --recreate-pods (ignore the warning here)
+```
+ls charts
+helm list -n roar
+k get all -n roar
+helm upgrade -n roar roar  .  --recreate-pods (ignore the warning here)
+```
 
-  13. Take a look at what we have out there now for this release.
+14. Take a look at what we have out there now for this release.
 
-$ helm list -n roar
-$ k get all -n roar
+```
+helm list -n roar
+k get all -n roar
+```
+
 You should see the various database pieces in the cluster now.
-14.  If you are not running in the VM, stop the roar-port.sh command that is running and start it again to pick  up the new pod.
 
-$ ../extra/roar-port.sh roar <nodeport from step 4>   
+15.  If you are not running in the VM, stop the roar-port.sh command that is running and start it again to pick  up the new pod.
 
-15.	Finally, refresh the webapp in your browser and you should see data being displayed.  
+```
+../extra/roar-port.sh roar <nodeport from step 4>   
+```
+
+16. Finally, refresh the webapp in your browser and you should see data being displayed.  
 
 <p align="center">
 **[END OF LAB]**
@@ -379,45 +416,37 @@ $ ../extra/roar-port.sh roar <nodeport from step 4>
 
 **Lab 5: Templating**
 **Purpose:  In this lab, we'll see how to add templating to a manifest file and also another way to specify values and setup dependencies.**
-1.	Let's suppose we want to create a helm deployment passing in a test database. We're going to change our dependency to be an actual copy of the chart so we can work with it more easily. 
 
-$ cd ~/helm-ws/roar-web (if not already there)
-$ rm -rf charts/* 
-$ cp -R ../roar-db  charts/
-2.	Take a look at the deployment.yaml in the sub-chart.  Notice that the image name is hardcoded and not templated.
+1. Let's suppose we want to create a helm deployment passing in a test database. We're going to change our dependency to be an actual copy of the chart so we can work with it more easily. 
 
-$ cat charts/roar-db/templates/deployment.yaml
+```
+cd ~/helm-ws/roar-web (if not already there)
+rm -rf charts/* 
+cp -R ../roar-db  charts/
+```
+
+2. Take a look at the deployment.yaml in the sub-chart.  Notice that the image name is hardcoded and not templated.
+
+```
+cat charts/roar-db/templates/deployment.yaml
+```
 
    - name: {{ .Chart.Name }}
      image: quay.io/bclaster/roar-db-image:v1
      imagePullPolicy: Always
      ports:
 
-3.	Edit the file and change that line to a templated form:
+3. Now that we want to edit that file and change that part to a templated format. To do that, we add it to the deployment.yaml file.  We have a before and after version of the file. Diff the two files with the code diff tool to see the differences.
 
-- Either -
-   $ meld  charts/roar-db/templates/deployment.yaml ../extra/deployment5-1.yaml (and click the circled arrow to merge)
- 
-	Then save your changes and exit meld
+```
+code -d extra/deployment5-1.yaml roar-db/templates/deployment.yaml
+```
 
-- OR -
-$ gedit charts/roar-db/templates/deployment.yaml
+4. Now we'll update our Chart.yaml file with the needed changes.  To save trying to get the yaml all correct in a regular editor, we’ll just use the diff tool’s merging ability. In the diff window, between the two files, click the arrow that points right to replace the code in our roar-db/templates/deployment.yaml file with the new code from extra/deployment5-1.yaml.  (In the figure below, this is the arrow that is circled and labelled "1".) After that, the files should be identical and you can close the diff window (circled "2" in the figure below).
 
-Change  line 19 from
+![Diff and merge in code](./images/helmfun8.png?raw=true "Diffing and merging for adding templating")
 
-image: quay.io/bclaster/roar-db-image:v1
-                 to
-image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
 
-              Make sure that the indentation still lines up as before:
-
-	     containers:
-           - name: {{ .Chart.Name }}
-             image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-             imagePullPolicy: Always
-             ports:	
-
-	Save the file and close the editor.
 4.	Now let's check our charts to make sure they're valid via the Helm lint function (you should still be in the roar-web directory).
 
 $ helm lint --with-subcharts
