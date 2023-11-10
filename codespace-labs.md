@@ -197,39 +197,43 @@ helm repo list
 
 **Purpose: In this lab, we'll create a simple Helm chart and add it to our new repository**
 
-1.	Let's use Helm to create a simple, default chart one that will spin up an nginx deployment.
+1. Let's use Helm to create a simple, default chart one that will spin up an nginx deployment.
 
 ```
 helm create sample-chart
 ```
 
-2.	Let's see what Helm created in terms of the structure of files and directories.  Use "tree" if running in the VM or if you have the "tree" utility installed. Otherwise, you can use the "ls" command
+2. Let's see what Helm created in terms of the structure of files and directories.  Use "tree" if running in the VM or if you have the "tree" utility installed. Otherwise, you can use the "ls" command
 
 ```
 tree sample-chart
 ```
 
-or
+3. Change into the *sample-chart* directory
 
 ```
-ls -R sample-chart
+cd sample-chart
 ```
 
-3. Now take a look at some of the main files in the new chart. You can select each of the files to look at them.
 
+4. Now take a look at some of the main files in the new chart. You can select each of the files to look at ones you're interested in. Switch back to the labs doc when done.
+   
 Select [**sample-chart/Chart.yaml**](./sample-chart/Chart.yaml) to open it.
+
 Select [**sample-chart/values.yaml**](./sample-chart/values.yaml) to open it.
+
 Select [**sample-chart/templates/deployment.yaml**](./sample-chart/templates/deployment.yaml) to open it.
+
 Select [**sample-chart/templates/service.yaml**](./sample-chart/templates/service.yaml) to open it.
 
 
-4.  Take a look at how Helm would render files in this chart.
+5.  Take a look at how Helm would render files in this chart.
 
 ```
 helm template --debug . | head -n 50
 ```
 
-5. Go ahead and install the chart.
+6. Go ahead and install the chart.
 
 ```
 helm install sample .
@@ -247,7 +251,7 @@ NOTES:
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace default port-forward $POD_NAME 8080:80
 
-6.  If you do a helm list command, you'll see that the chart was deployed in the "default" namespace (alongside our chart-museum one) and note that it is release version 1. You can also see the Kubernetes objects that were deployed in the default namespace for this.
+7.  If you do a helm list command, you'll see that the chart was deployed in the "default" namespace (alongside our chart-museum one) and note that it is release version 1. You can also see the Kubernetes objects that were deployed in the default namespace for this.
 
 ```
 helm list
