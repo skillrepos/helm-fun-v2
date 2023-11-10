@@ -97,54 +97,58 @@ k port-forward svc/local-chartmuseum-chartmuseum 8080:8080
  
 
 **Lab 2:  Changing values**
+
 **Purpose: In this lab, you’ll get to see how we can change values and upgrade releases through Helm, as well as learn some more Helm commands.**
 
-1.	The service that runs in the Kubernetes cluster for ChartMuseum is defaulted to be of type "ClusterIP" - mainly intended for traffic internal to the cluster. To see that, open a second terminal window and run the command to get the service info for the namespace where ChartMuseum is running.  (The Kubernetes command line application, kubectl, is aliased to “k” on this machine.)
+1. In order to do the following steps, we'll need to open a second terminal. We can do that by splitting this one. Either right-click and select Split Terminal or click on the two-panel icon near the trash can. See screenshot.
 
+![Opening split screen](./images/helmfun7.png?raw=true "Opening split screen")
+
+2. The service that runs in the Kubernetes cluster for ChartMuseum is defaulted to be of type "ClusterIP" - mainly intended for traffic internal to the cluster. To see that, open a second terminal window and run the command to get the service info for the namespace where ChartMuseum is running.  
 ```
 k get svc
 ```
 Notice the output indicating the type of service is ClusterIP.
 
-2.	Let's change the chartmuseum service to be of type NodePort instead of ClusterIP.  That will let us have a node in the range 30000-32767 that can be used for access.  Let's first see what values we have that can be changed in our chartmuseum chart 
+3. Let's change the chartmuseum service to be of type NodePort instead of ClusterIP.  That will let us have a node in the range 30000-32767 that can be used for access.  Let's first see what values we have that can be changed in our chartmuseum chart 
 
 ```
 helm show values cm/chartmuseum
 ```
 
-3.	Lots of information there, but we'd like to change only the chart type and assign a node port.  Let's look for the information around the text "ClusterIP"
+4. Lots of information there, but we'd like to change only the chart type and assign a node port.  Let's look for the information around the text "ClusterIP"
 
 ```
 helm show values cm/chartmuseum | grep -n14 ClusterIP
 ```
 
-4.	Notice under the output, in the "service" section, we have the "type" set to ClusterIP and an empty setting for "nodePort".
+5. Notice under the output, in the "service" section, we have the "type" set to ClusterIP and an empty setting for "nodePort".
 
-5.	Remind yourself of what release you currently have out there.
+6. Remind yourself of what release you currently have out there.
 
 ```
 helm list
 ```
 
-6.	Go ahead and stop the port-forwarding that was running in the other window (via Ctrl-C).
+7. Go ahead and stop the port-forwarding that was running in the other window (via Ctrl-C).
 
 ```
 Ctrl-C
 ```
   
-7.	We want to upgrade the service.type and service.nodePort values in our Helm release.  How do we do that on the command line?  Take a look at the first part of the help for helm upgrade.
+8. We want to upgrade the service.type and service.nodePort values in our Helm release.  How do we do that on the command line?  Take a look at the first part of the help for helm upgrade.
 
 ```
 helm upgrade --help | head
 ```
 
-8.	Notice the last line about being able to use the --set option to override values from the command line.  We'll run an upgrade and try that - explicitly setting the service.type to NodePort and the node port itself to 31000. (You may want to copy and paste this one from the file commands.txt in the extra subdirectory -   ~/helm-ws/extra/commands.txt )
+9. Notice the last line about being able to use the --set option to override values from the command line.  We'll run an upgrade and try that - explicitly setting the service.type to NodePort and the node port itself to 31000. (You may want to copy and paste this one from the file commands.txt in the extra subdirectory -   ~/helm-ws/extra/commands.txt )
 
 ```
 helm upgrade local-chartmuseum cm/chartmuseum --set env.open.DISABLE_API=false --set service.type=NodePort --set service.nodePort=31000
 ```
 
-9.	Take a look at the release you have out there now, its status and its history
+10. Take a look at the release you have out there now, its status and its history
 
 ```
 helm list
@@ -152,7 +156,7 @@ helm status local-chartmuseum
 helm history local-chartmuseum
 ```
 
-10.	Verify that the type of port has been changed for the running version.  
+11. Verify that the type of port has been changed for the running version.  
 
 ```
 k get svc
@@ -160,15 +164,26 @@ k get svc
 
 You should see it listed as a NodePort now with 31000 as the exposed port.
 
-11.	If you are NOT running in the VM, in a separate terminal, you'll need to port-forward again.  You could repeat what we did in lab 1, but for convenience, there's also a simple script you can run to do this, passing in the new port.
+12. You need to port-forward again. For convenience, there's also a simple script you can run to do this, passing in the new port.
 
 ```
 extra/cm-port.sh 31000
+```
 OR
+```
 k port-forward svc/local-chartmuseum 31000:8080
 ```
 
-12.	Now we'll add your chartmuseum repo to your list of repos for Helm and verify it's there.
+13. After executing this command, you'll see a popup in the lower right with a button to click on to see Chartmuseum running. (If the dialog goes away, you can click on the *PORTS* tab in the top "tab" line of the terminal, find the row with "8080" in the *Port* column, and click on that to open it up in a browser.)	
+
+![Opening app via dialog](./images/helmfun8.png?raw=true "Opening app via dialog")
+   
+
+14. After this, you should get a simple browser that opens up as a pane in the editor.
+
+![Opening cm in browser](./images/helmfun6.png?raw=true "Opening cm in browser")
+
+15. Now we'll add your chartmuseum repo to your list of repos for Helm and verify it's there. In your other terminal session:
 
 ```
 helm repo add local  http://localhost:31000
@@ -179,6 +194,7 @@ helm repo list
 </p>
 
 **Lab 3: Creating a Helm Chart**
+
 **Purpose: In this lab, we'll create a simple Helm chart and add it to our new repository**
 
 1.	Let's use Helm to create a simple, default chart one that will spin up an nginx deployment.
