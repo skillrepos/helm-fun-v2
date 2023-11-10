@@ -84,12 +84,12 @@ k port-forward svc/local-chartmuseum-chartmuseum 8080:8080
 
 11.  After executing this command, you'll see a popup in the lower right with a button to click on to see Chartmuseum running. (If the dialog goes away, you can click on the *PORTS* tab in the top "tab" line of the terminal, find the row with "8080" in the *Port* column, and click on that to open it up in a browser.)	
 
-![Opening app via dialog](./images/helmfun7.png?raw=true "Opening app via dialog")
+![Opening app via dialog](./images/helmfun5.png?raw=true "Opening app via dialog")
    
 
 12. After this, you should get a simple browser that opens up as a pane in the editor.
 
-![Opening cm in browser](./images/helmfun8.png?raw=true "Opening cm in browser")
+![Opening cm in browser](./images/helmfun6.png?raw=true "Opening cm in browser")
 
 <p align="center">
 **[END OF LAB]**
