@@ -1,6 +1,6 @@
 # Helm Fundamentals
 ## Session labs for codespace only
-## Revision 1.0 - 11/08/23
+## Revision 1.0 - 11/09/23
 
 **Startup IF NOT ALREADY DONE!**
 ```
@@ -12,7 +12,6 @@
 **Lab 1: Repos and Charts**
 
 **Purpose: In this lab, we'll start working with Helm by adding a repo and pulling down a Helm chart, installing it, and then updating the release.**
-NOTE: Commands here start after the “$” and are intended to be run in a terminal session on the VM.
 
 1.	First, let's verify what version of Helm we have installed (should be 3.0+)
 
@@ -36,7 +35,10 @@ helm repo list
 4.	You should see the stable and cm repo listed.  Now let's see what charts are available for download from these.
 
 ```
-helm search repo stable (What do you notice about all the charts here?)
+helm search repo stable
+```
+(What do you notice about all the charts here?)
+```
 helm search repo cm
 ```
 
@@ -80,16 +82,14 @@ k get svc
 k port-forward svc/local-chartmuseum-chartmuseum 8080:8080
 ```
 
-11.	Verify that chartmuseum is up and running and accessible by opening up a browser from the upper left "mouse" menu and selecting web browser, or using the "Web Browser" shortcut on the desktop.  Then go to http://localhost:8080 and ensure you see the chartmuseum welcome message. 
+11.  After executing this command, you'll see a popup in the lower right with a button to click on to see Chartmuseum running. (If the dialog goes away, you can click on the *PORTS* tab in the top "tab" line of the terminal, find the row with "8080" in the *Port* column, and click on that to open it up in a browser.)	
 
-12. Let’s see our application running from the containers and the compose. In the top "tab" line of the terminal, click on the *PORTS* tab. Per the docker-compose.yml file, our web app is running on port 8089. Find the row (probably the 3rd) with "8089" in the *Port* column. Under the second column *Forwarded Address*, click on the icon that looks like the splitter pane and, when you hover over it, says **Preview in Editor**. (See screenshot below.)
+![Opening app via dialog](./images/helmfun7.png?raw=true "Opening app via dialog")
    
-![Opening preview of app in editor](./images/lab2s5.png?raw=true "Opening preview app in editor")
 
+12. After this, you should get a simple browser that opens up as a pane in the editor.
 
-13. After this, you should get a simple browser that opens up as a pane in the editor.
-
-![Preview of server in editor](./images/lab2s6.png?raw=true "Preview of server in editor")
+![Opening cm in browser](./images/helmfun8.png?raw=true "Opening cm in browser")
 
 <p align="center">
 **[END OF LAB]**
