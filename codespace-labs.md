@@ -4,6 +4,7 @@
 
 **Startup IF NOT ALREADY DONE!**
 ```
+alias k=kubectl
 . ./setup.sh
 ```
 
@@ -104,8 +105,9 @@ k port-forward svc/local-chartmuseum-chartmuseum 8080:8080
 
 ![Opening split screen](./images/helmfun7.png?raw=true "Opening split screen")
 
-2. The service that runs in the Kubernetes cluster for ChartMuseum is defaulted to be of type "ClusterIP" - mainly intended for traffic internal to the cluster. To see that, open a second terminal window and run the command to get the service info for the namespace where ChartMuseum is running.  
+2. The service that runs in the Kubernetes cluster for ChartMuseum is defaulted to be of type "ClusterIP" - mainly intended for traffic internal to the cluster. To see that, open a second terminal window, set the alias, and run the command to get the service info for the namespace where ChartMuseum is running.  
 ```
+alias k=kubectl
 k get svc
 ```
 Notice the output indicating the type of service is ClusterIP.
