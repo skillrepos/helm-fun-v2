@@ -296,7 +296,7 @@ k delete pod/<sample-pod-name>
 1. Go to the main directory for our helm work and switch to the quay.io branch.  You can optionally look at any of the files you're interested in.
 
 ```
-cd ~/helm-ws
+cd /workspaces/helm-fun-v2
 git stash
 git checkout quay.io
 cat <files of interest>
