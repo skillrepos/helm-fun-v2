@@ -26,9 +26,10 @@ These steps **must** be completed prior to starting the actual labs.
 
 ## Start the Kubernetes cluster and complete setup
 
-2. Run the setup command in the codespace's terminal (**This will take several minutes to run...**):
+2. Setup an alias and run the setup command in the codespace's terminal (**This will take several minutes to run...**):
 
       ```
+      alias k=kubectl
       . ./setup.sh
       ```
 
