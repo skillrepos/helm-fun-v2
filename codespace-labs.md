@@ -181,7 +181,7 @@ k port-forward svc/local-chartmuseum 31000:8080
 ![Opening app via dialog](./images/helmfun8.png?raw=true "Opening app via dialog")
    
 
-14. After this, you should get a simple browser that opens up as a pane in the editor.
+14. After this, you should get a browser tab with Chart Museum running.
 
 ![Opening cm in browser](./images/helmfun6.png?raw=true "Opening cm in browser")
 
@@ -307,7 +307,7 @@ cat <files of interest>
 2. Create a namespace for the app to run in and then deploy it via Helm
 
 ```
-kubectl create ns roar
+k create ns roar
 cd roar-web
 helm install -n roar roar .
 ```
@@ -345,17 +345,23 @@ k get svc -n roar
 
 Look for the NodePort setting in the service output (should be a number > 30000 after "8089:")
 
-5. If NOT running in the VM, forward the port from step 4 to 8080 on the host machine.  You can use the provided script below to do this.
+5. Forward the port from step 4 to 8080 on the host machine.  You can use the provided script below to do this.
 
 ```
 ../extra/roar-port.sh roar <nodeport from step 4>   
 ```
 
-6. In a browser, go to  http://localhost:<NodePort>/roar/
-	You should see something like this:
- 
+6. After executing this command, you'll see a popup in the lower right with a button to click on to see the application running. (If the dialog goes away, you can click on the *PORTS* tab in the top "tab" line of the terminal, find the row with the node port in the *Port* column, and click on that to open it up in a browser.)	
 
-7. Notice that we see our webapp, but there is no data in the table.  This is because we don't have our database deployed and being pulled in. We have a database chart and resources on our local system. Let's see how to get it pulled in as a dependency.  First, change into the directory for the database pieces.  Again, you can look at any files of interest in there.
+![Opening app via dialog](./images/helmfun9.png?raw=true "Opening app via dialog")
+   
+
+7. After this, you should get a browser tab with the web server running. To see the application running, add "/roar/" to the end of the URL.  **Make sure to include the trailing slash in /roar/**
+
+![Opening app in browser](./images/helmfun10.png?raw=true "Opening app in browser")
+
+
+8. Notice that we see our webapp, but there is no data in the table.  This is because we don't have our database deployed and being pulled in. We have a database chart and resources on our local system. Let's see how to get it pulled in as a dependency.  First, change into the directory for the database pieces.  Again, you can look at any files of interest in there.
 
 ```
 cd ~/helm-ws/roar-db
@@ -374,7 +380,7 @@ Successfully packaged chart and saved it to: /home/diyuser3/helm-ws/roar-db/roar
 9. Upload the newly created package to our ChartMuseum instance. (This command is also in the file commands.txt in the extra subdirectory -   ~/helm-ws/extra/commands.txt )
 
 ```
-curl --data-binary "@roar-db-0.1.0.tgz"  http://localhost:31000/api/charts
+curl --data-binary "@roar-db-0.1.0.tgz"  http://{$CODESPACE_NAME}-31000.app.github.dev/api/charts
 ```
 When done, you should see output like this:
 {"saved":true}
@@ -382,12 +388,13 @@ When done, you should see output like this:
 10. Now that we have this package stored in our chart repository, we can add it as a dependency into our webapp's chart so it will have data to display.  To do that, we add it to the Chart.yaml file.  We have a before and after version of the file. Diff the two files with the code diff tool to see the differences.
 
 ```
-code -d extra/Chart.yaml roar-web/Chart.yaml
+cd /workspaces/helm-fun-v2/roar-web
+code -d ../extra/Chart.yaml Chart.yaml
 ```
 
 11. Now we'll update our Chart.yaml file with the needed changes.  To save trying to get the yaml all correct in a regular editor, we’ll just use the diff tool’s merging ability. In the diff window, between the two files, click the arrow that points right to replace the code in our roar-web/Chart.yaml file with the new code from extra/Chart.yaml.  (In the figure below, this is the arrow that is circled and labelled "1".) After that, the files should be identical and you can close the diff window (circled "2" in the figure below).
 
-![Diff and merge in code](./images/helmfun7.png?raw=true "Diffing and merging for dependent chart")
+![Diff and merge in code](./images/helmfun11.png?raw=true "Diffing and merging for dependent chart")
 
 	
 12. Now, update your dependencies.
