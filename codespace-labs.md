@@ -105,7 +105,7 @@ k port-forward svc/local-chartmuseum-chartmuseum 8080:8080
 
 ![Opening split screen](./images/helmfun7.png?raw=true "Opening split screen")
 
-2. The service that runs in the Kubernetes cluster for ChartMuseum is defaulted to be of type "ClusterIP" - mainly intended for traffic internal to the cluster. To see that, open a second terminal window, set the alias, and run the command to get the service info for the namespace where ChartMuseum is running.  
+2. The service that runs in the Kubernetes cluster for ChartMuseum is defaulted to be of type "ClusterIP" - mainly intended for traffic internal to the cluster. To see that, in the second terminal window, set the alias, and run the command to get the service info for the namespace where ChartMuseum is running.  
 ```
 alias k=kubectl
 k get svc
@@ -144,7 +144,7 @@ Ctrl-C
 helm upgrade --help | head
 ```
 
-9. Notice the last line about being able to use the --set option to override values from the command line.  We'll run an upgrade and try that - explicitly setting the service.type to NodePort and the node port itself to 31000. (You may want to copy and paste this one from the file commands.txt in the extra subdirectory -   ~/helm-ws/extra/commands.txt )
+9. Notice the last line about being able to use the --set option to override values from the command line.  We'll run an upgrade and try that - explicitly setting the service.type to NodePort and the node port itself to 31000. (You may want to copy and paste this one.)
 
 ```
 helm upgrade local-chartmuseum cm/chartmuseum --set env.open.DISABLE_API=false --set service.type=NodePort --set service.nodePort=31000
@@ -185,7 +185,7 @@ k port-forward svc/local-chartmuseum 31000:8080
 
 ![Opening cm in browser](./images/helmfun6.png?raw=true "Opening cm in browser")
 
-15. Now we'll add your chartmuseum repo to your list of repos for Helm and verify it's there. In your other terminal session:
+15. Now we'll add your chartmuseum repo to your list of repos for Helm and verify it's there. **In your other terminal session:**
 
 ```
 helm repo add local  http://localhost:31000
@@ -205,7 +205,7 @@ helm repo list
 helm create sample-chart
 ```
 
-2. Let's see what Helm created in terms of the structure of files and directories.  Use "tree" if running in the VM or if you have the "tree" utility installed. Otherwise, you can use the "ls" command
+2. Let's see what Helm created in terms of the structure of files and directories.  
 
 ```
 tree sample-chart
@@ -248,7 +248,7 @@ NAMESPACE: default
 STATUS: deployed
 REVISION: 1
 NOTES:
-1. Get the application URL by running these commands:
+  Get the application URL by running these commands:
   export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=sample-chart,app.kubernetes.io/instance=sample" -o jsonpath="{.items[0].metadata.name}")
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace default port-forward $POD_NAME 8080:80
@@ -260,7 +260,7 @@ helm list
 k get all | grep sample
 ```
 
-7. Take a look at the rendered templates that got deployed into the cluster.
+8. Take a look at the rendered templates that got deployed into the cluster.
 
 ```
 helm get manifest sample | head -n 50
@@ -268,7 +268,7 @@ helm get manifest sample | head -n 50
 
 This should look very similar to the output from the template command that was issued earlier.
 
-8. You may have noticed earlier that this chart had a test built into it.  Let's run the test now.  Note the output and also note the pods that are there afterwards.  Then take a look at the definition of the test afterward and see if you can understand how it all ties together.
+9. You may have noticed earlier that this chart had a test built into it.  Let's run the test now.  Note the output and also note the pods that are there afterwards.  Then take a look at the definition of the test afterward and see if you can understand how it all ties together.
 
 ```
 helm test sample
@@ -276,12 +276,12 @@ k get pods
 cat templates/tests/test-connection.yaml
 ```
  
-9. We're done with this release now, so we can delete it.
+10. We're done with this release now, so we can delete it.
 
 ```
 helm delete sample
 ```
-10. Look at the objects in the default namespace to see that the sample ones were removed.  You may see a leftover test pod that did not get removed.  If so, use the second command below to remove it.
+11. Look at the objects in the default namespace to see that the sample ones were removed.  You may see a leftover test pod that did not get removed.  If so, use the second command below to remove it.
 
 ```
 k get all | grep sample
