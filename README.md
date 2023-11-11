@@ -7,10 +7,10 @@ These steps **must** be completed prior to starting the actual labs.
 ## Create your own repository for these labs
 
 - Ensure that you have created a repository by forking the [skillrepos/helm-fun-v2](https://github.com/skillrepos/helm-fun-v2) project as a template into your own GitHub area.
-- You do this by clicking the `Fork` button in the upper right portion of the main project page and following the steps to create a copy in **your-github-userid/helm-fun-v2** .
+- You do this by clicking the `Fork` button in the upper right portion of the main project page and following the steps to create a copy in **your-github-userid/helm-fun-v2** .  **Make sure to uncheck the "only the main branch" checkbox as shown below.**
 
 ![Forking repository](./images/helmfun1.png?raw=true "Forking the repository")
-![Forking repository](./images/helmfun2.png?raw=true "Forking the repository")
+![Forking repository](./images/helmfun2a.png?raw=true "Forking the repository")
 
 ## Configure your codespace
 
