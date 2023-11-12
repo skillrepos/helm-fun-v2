@@ -1,11 +1,12 @@
 # Helm Fundamentals
-## Session labs for codespace only
-## Revision 1.0 - 11/09/23
+## Deploying, upgrading, and rolling back applications in Kubernetes
+
+## Revision 1.1 - 11/12/23
 
 **Startup IF NOT ALREADY DONE!**
 ```
 alias k=kubectl
-. ./setup.sh
+minikube start
 ```
 
 **NOTE: To copy and paste in the codespace, you may need to use keyboard commands - CTRL-C and CTRL-V.**
