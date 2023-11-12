@@ -313,12 +313,14 @@ helm install -n roar roar .
 ```
 
 Afterwards you should see a set of output like the following:
+```
 NAME: roar
 LAST DEPLOYED: Mon Jun 20 21:21:47 2022
 NAMESPACE: roar
 STATUS: deployed
 REVISION: 1
 TEST SUITE: None
+```
 
 3. Take a look at the release that has been installed in the namespace. 
 
@@ -380,9 +382,10 @@ Successfully packaged chart and saved it to: /home/diyuser3/helm-ws/roar-db/roar
 9. Upload the newly created package to our ChartMuseum instance. (This command is also in the file commands.txt in the extra subdirectory -   ~/helm-ws/extra/commands.txt )
 
 ```
-curl --data-binary "@roar-db-0.1.0.tgz"  http://{$CODESPACE_NAME}-31000.app.github.dev/api/charts
+curl --data-binary "@roar-db-0.1.0.tgz" http://localhost:31000/api/charts
 ```
 When done, you should see output like this:
+
 {"saved":true}
 
 10. Now that we have this package stored in our chart repository, we can add it as a dependency into our webapp's chart so it will have data to display.  To do that, we add it to the Chart.yaml file.  We have a before and after version of the file. Diff the two files with the code diff tool to see the differences.
@@ -430,7 +433,7 @@ k get all -n roar
 
 You should see the various database pieces in the cluster now.
 
-15.  If you are not running in the VM, stop the roar-port.sh command that is running and start it again to pick  up the new pod.
+15.  Stop the roar-port.sh command that is running and start it again to pick  up the new pod.
 
 ```
 ../extra/roar-port.sh roar <nodeport from step 4>   
@@ -444,6 +447,7 @@ You should see the various database pieces in the cluster now.
 
 
 **Lab 5: Templating**
+
 **Purpose:  In this lab, we'll see how to add templating to a manifest file and also another way to specify values and setup dependencies.**
 
 1. Let's suppose we want to create a helm deployment passing in a test database. We're going to change our dependency to be an actual copy of the chart so we can work with it more easily. 
@@ -456,130 +460,138 @@ cp -R ../roar-db  charts/
 
 2. Take a look at the deployment.yaml in the sub-chart.  Notice that the image name is hardcoded and not templated.
 
-```
-cat charts/roar-db/templates/deployment.yaml
-```
+Select [**roar-db/templates/deployment.yaml**](./roar-db/templates/deployment.yaml) to open it.
 
+Here's the relevant portion:
+
+```
    - name: {{ .Chart.Name }}
      image: quay.io/bclaster/roar-db-image:v1
      imagePullPolicy: Always
      ports:
+```
 
-3. Now that we want to edit that file and change that part to a templated format. To do that, we add it to the deployment.yaml file.  We have a before and after version of the file. Diff the two files with the code diff tool to see the differences.
+3. We want to edit that file and change that part to a templated format. To do that, we add it to the *deployment.yaml file*.  We have a before and after version of the file. Diff the two files with the code diff tool to see the differences.
 
 ```
-code -d extra/deployment5-1.yaml roar-db/templates/deployment.yaml
+code -d extra/deployment5-1.yaml charts/roar-db/templates/deployment.yaml
 ```
 
 4. Now we'll update our Chart.yaml file with the needed changes.  To save trying to get the yaml all correct in a regular editor, we’ll just use the diff tool’s merging ability. In the diff window, between the two files, click the arrow that points right to replace the code in our roar-db/templates/deployment.yaml file with the new code from extra/deployment5-1.yaml.  (In the figure below, this is the arrow that is circled and labelled "1".) After that, the files should be identical and you can close the diff window (circled "2" in the figure below).
 
-![Diff and merge in code](./images/helmfun8.png?raw=true "Diffing and merging for adding templating")
+![Diff and merge in code](./images/helmfun12.png?raw=true "Diffing and merging for adding templating")
 
 
-4.	Now let's check our charts to make sure they're valid via the Helm lint function (you should still be in the roar-web directory).
+5. Now let's check our charts to make sure they're valid via the Helm lint function (you should still be in the roar-web directory).
 
-$ helm lint --with-subcharts
+```
+helm lint --with-subcharts
+```
+
 What messages do you see?  What does the error mean?
 
-5.	There's a "nil pointer evaluation" because we haven't yet defined anything in values.yaml for "Values.image.repository" or "Values.image.tag".   Let's fix that now.
+6. There's a "nil pointer evaluation" because we haven't yet defined anything in values.yaml for "Values.image.repository" or "Values.image.tag".   Let's fix that now.
 
-   - Either - 
-$ meld charts/roar-db/values.yaml ../extra/values5-1.yaml (and then click arrow on right to merge)
+```   
+code -d ../extra/values5-1.yaml charts/roar-db/values.yaml 
+```
+ 
+7.  Now we'll update our values.yaml file with the needed changes.  To save trying to get the yaml all correct in a regular editor, we’ll just use the diff tool’s merging ability. In the diff window, between the two files, click the arrow that points right to replace the code in our values.yaml file with the new code from extra/values5-1.yaml.  (In the figure below, this is the arrow that is circled and labelled "1".) After that, the files should be identical and you can close the diff window (circled "2" in the figure below).
+
+![Diff and merge in code](./images/helmfun12.png?raw=true "Diffing and merging for adding templating")
 
  
+8. After completing the merge, run the lint check again.  
 
-  (Save your changes and exit meld)
+```
+helm lint --with-subcharts
+```
 
-   - OR -
-$ gedit charts/roar-db/values.yaml
-Change the top from this
-# Default values for roar-db-chart.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-replicaCount: 1
-nameOverride: mysql
-deployment:
-  ports:
-    name: mysql
-    containerPort: 3306
-to this:
-# Default values for roar-db-chart.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-image:
-  repository: quay.io/bclaster/roar-db-image
-  tag: v1
-replicaCount: 1
-nameOverride: mysql
-deployment:
-  ports:
-
-
-6.	Save your changes and exit the editor.  Then run the lint check again.  
-
-$ helm lint --with-subcharts
 This time you should not see any errors (though you will still see INFO messages).
 
-7.	 Create a new namespace and deploy this new version of the chart.
+9. Create a new namespace and deploy this new version of the chart.
 
-$ k create ns roar2 
-$ cd ~/helm-ws/roar-web (if not already there)
-$ helm install roar2 -n roar2 .
+```
+k create ns roar2 
+cd ~/helm-ws/roar-web (if not already there)
+helm install roar2 -n roar2 .
+```
 
-8.	Find the nodeport and open up the webapp from the release in a browser.
+8. Find the nodeport and open up the webapp from the release in a browser.
 
-$ k get svc -n roar2
+```
+k get svc -n roar2
+```
+
 Find the NodePort value (will be > 30000)
 
-9.	If you are not running in the VM, start the roar-port.sh command  with the namespace and nodeport.
+9. Start the roar-port.sh command  with the namespace and nodeport.
 
-$ ../extra/roar-port.sh roar2 <nodeport>   
+```
+../extra/roar-port.sh roar2 <nodeport>   
+```
 
-10.	In the browser, go to http://localhost:<NodePort value>/roar/
-Here you should see the same webapp and data as before.
+10. After executing this command, you'll see a popup in the lower right with a button to click on to see the application running. (If the dialog goes away, you can click on the *PORTS* tab in the top "tab" line of the terminal, find the row with the node port in the *Port* column, and click on that to open it up in a browser.)	
 
-11.	Let's suppose we want to overwrite the image used here to be one that is for a test database. The image for the test database is on the quay.io hub at quay.io/bclaster/roar-db-test:v4 .
-We could use a long command line string such as this to set it and use the template command to show the rendered files.  In the roar-web subdirectory, run the commands below to see the difference. 
+![Opening app via dialog](./images/helmfun9.png?raw=true "Opening app via dialog")
+   
 
-$ helm template . --debug | grep image
-(This command is also in the file commands.txt in the extra subdirectory -   ~/helm-ws/extra/commands.txt )
-$ helm template . --debug --set roar-db.image.repository=quay.io/bclaster/roar-db-test   --set roar-db.image.tag=v4  |  grep image
+11. After this, you should get a browser tab with the web server running. To see the application running, add "/roar/" to the end of the URL.  **Make sure to include the trailing slash in /roar/**
 
-12.	It's not always convenient to have to override things on the command line.  But there are other ways to override values.  Let's create a simple "extra" values file.   
+![Opening app in browser](./images/helmfun10.png?raw=true "Opening app in browser")
 
-$ gedit test-db.yaml
+12. Let's suppose we want to overwrite the image used here to be one that is for a test database. The image for the test database is on the quay.io hub at *quay.io/bclaster/roar-db-test:v4* . We could use a long command line string such as this to set it and use the template command to show the rendered files.  In the roar-web subdirectory, run the commands below to see the difference. 
+
+```
+helm template . --debug | grep image
+helm template . --debug --set roar-db.image.repository=quay.io/bclaster/roar-db-test   --set roar-db.image.tag=v4  |  grep image
+```
+
+13. It's not always convenient to have to override things on the command line.  But there are other ways to override values.  Let's create a simple "extra" values file.   
+
+```
+code test-db.yaml
+```
+
 In the editor, add the following lines:
+
+```
 roar-db:
   image: 
     repository: quay.io/bclaster/roar-db-test
     tag: v4
+```
 
-(For convenience, there is a test-db.yaml file in the "extra" area of the helm-ws area.)
-Save your changes to the file and exit the editor.
+(For convenience, there is a test-db.yaml file in the "extra" area of the helm-fun-v2 area.)
 
-13.	 Now, in one of your terminal windows, start a watch of the pods in your deployed helm release.  This is so that you can see the changes that will happen when we upgrade.  Save your changes to the file, and run the following command to pull in your custom definitions.  
+14. Now, in one of your terminal windows, start a watch of the pods in your deployed helm release.  This is so that you can see the changes that will happen when we upgrade.  
 
-$ k get pods -n roar2 --watch
-14.	Finally, let's do an upgrade using the new values file.  In a separate terminal window from the one where you did step 11, execute the following commands:
+```
+k get pods -n roar2 --watch
+```
 
+15. Finally, let's do an upgrade using the new values file.  In a separate terminal window from the one where you did step 14, execute the following commands:
 
-$ cd ~/helm-ws/roar-web
+```
+cd ~/helm-ws/roar-web
+helm upgrade -n roar2 roar2 . -f test-db.yaml --recreate-pods
+```
 
-(This next command is also in the file commands.txt in the extra subdirectory - ~/helm-ws/extra/commands.txt )
-
-$ helm upgrade -n roar2 roar2 . -f test-db.yaml --recreate-pods
 Watch the changes happening to the pods in the terminal window with the watch running.
 
-15.	If you are not running in the VM, stop the roar-port.sh command that is running and start it again to pick up the new pod.  Note that this is specifying the "roar2" namespace, not the "roar" one.
+15. Stop the roar-port.sh command that is running and start it again to pick up the new pod.  Note that this is specifying the "roar2" namespace, not the "roar" one.
 
-$ ../extra/roar-port.sh roar2 <nodeport>   
+```
+../extra/roar-port.sh roar2 <nodeport>   
+```
  
-16.	Go back to your browser and refresh it.  You should see a version of the (TEST) data in use now. (Depending on how quickly you refresh, you may need to refresh more than once.)
-
+16. Go back to your browser and refresh it.  You should see a version of the (TEST) data in use now. (Depending on how quickly you refresh, you may need to refresh more than once.)
  
-17.	Go ahead and stop the watch from running in the window via Ctrl-C.
+17. Go ahead and stop the watch from running in the window via Ctrl-C.
 
-$ Ctrl-C
+```
+Ctrl-C
+```
 
 <p align="center">
 **[END OF LAB]**
