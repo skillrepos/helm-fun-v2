@@ -600,47 +600,37 @@ Ctrl-C
 **Lab 6: Using Functions and Pipelines**
 **Purpose: In this lab, we'll see how to use functions and pipelines to expand what we can do in Helm charts.**
 
-1.	In our last lab, we added a separate values file that we could use to swap out which database we used - the prod one or the test one.   Now let's work on a way to do this based on a simple command line setting rather than having to have a separate file with multiple values.  To start, let's make a copy of our working project that already functions.  And then go to that directory.
+1. In our last lab, we added a separate values file that we could use to swap out which database we used - the prod one or the test one.   Now let's work on a way to do this based on a simple command line setting rather than having to have a separate file with multiple values.  To start, let's make a copy of our working project that already functions.  And then go to that directory.
 
 ```
-cd ~/helm-ws
+cd /workspaces/helm-fun-v2
 cp -R roar-web roar-web2
 cd roar-web2
 ```
 
-2.	For switching between the prod and test database, we'll add two different versions of the image to choose from - one for prod and one for test.  Edit and modify the charts/roar-db/values.yaml file and add the following values. (For reference, or if you're concerned about the typing, in the ~/helm-ws/extra folder, there is a values.yaml with the code already in it.). You can save and close the editor afterwards.
-
-- Either -
+2. For switching between the prod and test database, we'll add two different versions of the image to choose from - one for prod and one for test.  Edit and modify the charts/roar-db/values.yaml file and add the following values. (For reference, or if you're concerned about the typing, in the ~/helm-fun-v2/extra folder, there is a values.yaml with the code already in it.) You can save and close the editor afterwards.
 
 ```   
-meld charts/roar-db/values.yaml ../extra/values6-1.yaml (and click on arrow circled in red)
+code -d ../extra/values6-1.yml charts/roar-db/values.yaml 
 ```
 
-	(Save and close meld)
-- OR - 
-$ gedit charts/roar-db/values.yaml
-Change the previous image definition to the following lines
-image:
-  prod:
-    repository: quay.io/bclaster/roar-db-image
-    tag: v1
-  test:
-    repository: quay.io/bclaster/roar-db-test
-    tag: v4
- 
+3. Now we'll update our values.yaml file with the needed changes.  To save trying to get the yaml all correct in a regular editor, we’ll just use the diff tool’s merging ability. In the diff window, between the two files, click the arrow that points right to replace the code in our values.yaml file with the new code from extra/values6-1.yaml.  (In the figure below, this is the arrow that is circled and labelled "1".) After that, the files should be identical and you can close the diff window (circled "2" in the figure below).
 
--OR-
-3.	Now, we'll add some processing to enable selecting one of these images based on passing a setting for "stage" of either "PROD" or "TEST".  The design logic is 
+![Diff and merge in code](./images/helmfun14.png?raw=true "Diffing and merging for adding prod and test")
 
+4. Now, we'll add some processing to enable selecting one of these images based on passing a setting for "stage" of either "PROD" or "TEST".  The design logic is 
+```
 if  stage = PROD
 	use   image.prod.repository :  image.prod.tag
 else if  stage = TEST
 	use   image.test.repository : image.test.tag
 else
    	display error message that we don't have a valid stage setting
+```
 
 Translating this into templating syntax, we use an if/(else if)/else flow.  The "eq" function is used for comparison, passing the two things to compare after it.  Also, there is a "required" function that will handle the default error checking.  Putting it all together, it could look like this:
 
+```
 {{- if eq .Values.stage  "PROD" }}
   image: "{{- .Values.image.prod.repository }}:{{ .Values.image.prod.tag -}}"
 {{ else if eq .Values.stage  "TEST" }}
@@ -648,25 +638,21 @@ Translating this into templating syntax, we use an if/(else if)/else flow.  The 
 {{ else }}
   image: "{{- fail "A valid .Values.stage entry required!"  }}"
 {{ end -}}
+```
 
-4.	Edit the charts/roar-db/templates/deployment.yaml  file and make the changes shown below (add the if - end template pieces above into the containers section).  Be sure you are in the helm-ws/roar-web2 directory and be sure to use spaces and not tabs.
+5. Next, update the deployment yaml file with this change. To save trying to get the yaml all correct in a regular editor, we’ll just use the diff tool’s merging ability. In the diff window, between the two files, click the arrow that points right to replace the code in our deployment.yaml file with the new code from extra/deployment6-1.yaml.  (In the figure below, this is the arrow that is circled and labelled "1".) After that, the files should be identical and you can close the diff window (circled "2" in the figure below). 
 
-(For convenience or if you have trouble with typing it in, there is a deployment.yaml file in the extras area.)
+```
+code -d  ../extra/deployment6-1.yaml charts/roar-db/templates/deployment.yaml 
+```
+![Diff and merge in code](./images/helmfun14.png?raw=true "Diffing and merging for adding prod and test")
 
-
-- Either -
-$   meld charts/roar-db/templates/deployment.yaml ../extra/deployment6-1.yaml  (and then click on the arrow in the circle to merge)
- 
-(Save your changes and exit meld)
-- OR - 
-    $ gedit charts/roar-db/templates/deployment.yaml
-<add in lines> 
- 
-5.	Save your changes, exit the editor, and do a dry-run to make sure the image comes out as expected.   To simplify seeing the change, we'll grep for image with a few lines of context (from the roar-web2 subdir).
+6. Do a dry-run to make sure the image comes out as expected.   To simplify seeing the change, we'll grep for image with a few lines of context (from the roar-web2 subdir).
 
 (This next command is also in the file commands.txt in the extra subdirectory - ~/helm-ws/extra/commands.txt )
 
-$ helm install --set roar-db.stage=TEST --dry-run foo . | grep image -n3
+```
+helm install --set roar-db.stage=TEST --dry-run foo . | grep image -n3
 	You should see output like the following:
 65-    spec:
 66-      containers:
@@ -677,72 +663,74 @@ $ helm install --set roar-db.stage=TEST --dry-run foo . | grep image -n3
 71-        - name: mysql
 72-          containerPort: 3306
 --
+```
 
-6.	While this appears to work, what happens if we pass a lower-case value?
+7. While this appears to work, what happens if we pass a lower-case value?
 
-(This next command is also in the file commands.txt in the extra subdirectory - ~/helm-ws/extra/commands.txt )
+```
+helm install --set roar-db.stage=test --dry-run foo . | grep image -n3
+```
 
-$ helm install --set roar-db.stage=test --dry-run foo . | grep image -n3
 This is not what we want.   Let's make our arguments case-insensitive.  To do this, we'll pipe the value we pass in through a pipeline and to another template function called "upper" to upper-case it first.
 
-7.	Edit the deployment file and make the changes shown below.
-	- Either -
-$ meld charts/roar-db/templates/deployment.yaml ../extra/deployment6-2.yaml     (and click both circled arrows to merge)
+7. Use the diff and merge functionality to merge in changes from ../extra/deployment6-2.yaml as done previously.
+
+```
+code -d ../extra/deployment6-2.yaml charts/roar-db/templates/deployment.yaml ../extra/deployment6-2.yaml
+```
+
+![Diff and merge in upper-case handling code](./images/helmfun16.png?raw=true "Diffing and merging for adding upper-case handling code")
  
-	(Save your changes and exit meld)
+8. Try running the command with the lower-case setting again. This time it should work.
 
-   -OR-
-$ gedit charts/roar-db/templates/deployment.yaml
+```
+helm install --set roar-db.stage=test --dry-run foo . | grep image -n3
+```
 
-Change line 19 from 
-{{- if eq .Values.stage  "PROD" }}
-to 
-{{- if eq  ( .Values.stage | upper )  "PROD" }}
+9. What happens if we don't pass in a setting for stage?  Try it and see.
 
-and change line 21 from
-      {{ else if eq .Values.stage  "TEST" }}
-to
-      {{ else if eq ( .Values.stage | upper )  "TEST" }}
- 
-8.	Save your changes and try running the command with the lower-case setting again. This time it should work.
-
-$ helm install --set roar-db.stage=test --dry-run foo . | grep image -n3
-
-9.	What happens if we don't pass in a setting for stage?  Try it and see.
-
-$ helm install --dry-run foo . | grep image -n3
+```
+helm install --dry-run foo . | grep image -n3
+```
 
 We get an error because we don't have any value set and one of our functions fails because it doesn't have the correct type to compare.
 
-10.	We'd rather have a default that works.  Let's set one up in the values.yaml of the parent project that will be passed in to the child project.  In the helm-ws/roar-web2 directory, edit the values.yaml file and add the settings below.  
-    - Either - 
-$ meld values.yaml ../extra/values6-2.yaml      (and click the circled arrow to merge) 
-                  ( Save your changes and exit meld )
-         - OR -
-$ gedit ~/helm-ws/roar-web2/values.yaml
-<add these lines>
-roar-db:
-  stage: PROD
- 
+10. We'd rather have a default that works.  Let's set one up in the values.yaml of the parent project that will be passed in to the child project. Use the diff and merge functionality to merge in changes from ../extra/values6-2.yaml as done previously.
+
+```
+code -d ../extra/values6-2.yaml values.yaml
+```
+
+![Diff and merge in defaults code](./images/helmfun17.png?raw=true "Diffing and merging for adding defaults")
+
+  
 11.	Now try running the same command as you did in step 8. 
 
-$ helm install --dry-run foo . | grep image -n3
+```
+helm install --dry-run foo . | grep image -n3
+```
+
 Notice that this time it worked.  Also notice that the value was passed down from the parent project.
 
-12. Finally let's try deploying a running test instance of our application and a running instance of the prod version of our application. (Some of these commands are also in the file commands.txt in the extra subdirectory - ~/helm-ws/extra/commands.txt )
+12. Finally let's try deploying a running test instance of our application and a running instance of the prod version of our application. (
 
-$ k create ns roar-prod
-$ helm install --set roar-db.stage=PROD roar-prod -n roar-prod . 
-$ k create ns roar-test
-$ helm install --set roar-db.stage=TEST roar-test -n roar-test .
+```
+k create ns roar-prod
+helm install --set roar-db.stage=PROD roar-prod -n roar-prod . 
+k create ns roar-test
+helm install --set roar-db.stage=TEST roar-test -n roar-test .
+```
 
-13.  Now, you can get the NodePort for both versions, and open them in a browser to see the results.
-$ k get svc -n roar-prod | grep web
-$ ../extra/roar-port.sh roar-prod <nodeport for prod> (if not running in vm)
-$ k get svc -n roar-test | grep web
-$ ../extra/roar-port.sh roar-test <nodeport for test> (if not running in vm)
+13. Now, you can get the NodePort for both versions, and open them in a browser to see the results.
 
-14. As a reminder, the port numbers that are > 30000 are the ones you want.  You can open each of them in a browser at  http://localhost:<nodeport>/roar/  and view the different instance.
+```    
+k get svc -n roar-prod | grep web
+../extra/roar-port.sh roar-prod <nodeport for prod> (if not running in vm)
+k get svc -n roar-test | grep web
+../extra/roar-port.sh roar-test <nodeport for test> (if not running in vm)
+```
+
+14. As a reminder, the port numbers that are > 30000 are the ones you want.  You can open each of them in a browser as done before and view the different instance.
 
 <p align="center">
 **[END OF LAB]**
