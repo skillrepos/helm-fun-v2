@@ -30,7 +30,7 @@ These steps **must** be completed prior to starting the actual labs.
 
       ```
       alias k=kubectl
-      . ./setup.sh
+      minikube start
       ```
 
     - The output should look similar to the following.
