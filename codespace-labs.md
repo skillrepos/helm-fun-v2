@@ -525,7 +525,6 @@ This time you should not see any errors (though you will still see INFO messages
 
 ```
 k create ns roar2 
-cd ~/helm-ws/roar-web (if not already there)
 helm install roar2 -n roar2 .
 ```
 
@@ -540,7 +539,7 @@ Find the NodePort value (will be > 30000)
 9. Start the roar-port.sh command  with the namespace and nodeport.
 
 ```
-../extra/roar-port.sh roar2 <nodeport>   
+../extra/roar-port.sh roar2 <nodeport>  &  
 ```
 
 10. After executing this command, you'll see a popup in the lower right with a button to click on to see the application running. (If the dialog goes away, you can click on the *PORTS* tab in the top "tab" line of the terminal, find the row with the node port in the *Port* column, and click on that to open it up in a browser.)	
@@ -573,6 +572,7 @@ roar-db:
     repository: quay.io/bclaster/roar-db-test
     tag: v4
 ```
+**Close/save the file by clicking on the `x` in its tab.**
 
 (For convenience, there is a test-db.yaml file in the "extra" area of the helm-fun-v2 area.)
 
@@ -582,22 +582,23 @@ roar-db:
 k get pods -n roar2 --watch
 ```
 
-15. Finally, let's do an upgrade using the new values file.  In a separate terminal window from the one where you did step 14, execute the following commands:
+15. Finally, let's do an upgrade using the new values file.  In a separate terminal window from the one where you did step 14, execute the following commands (this assumes you're still in the `roar-web` subdir):
 
 ```
-cd ~/helm-ws/roar-web
 helm upgrade -n roar2 roar2 . -f test-db.yaml --recreate-pods
 ```
 
 Watch the changes happening to the pods in the terminal window with the watch running.
 
-15. Stop the roar-port.sh command that is running and start it again to pick up the new pod.  Note that this is specifying the "roar2" namespace, not the "roar" one.
+15. Run the roar-port.sh command to do the port forward again. (It may be a minute before the other one stops.)  Note that this is specifying the "roar2" namespace, not the "roar" one.
 
 ```
 ../extra/roar-port.sh roar2 <nodeport>   
 ```
  
 16. Go back to your browser and refresh it.  You should see a version of the (TEST) data in use now. (Depending on how quickly you refresh, you may need to refresh more than once.)
+
+![App with test data](./images/helmfun19.png?raw=true "App with test data")
  
 17. Go ahead and stop the watch from running in the window via Ctrl-C.
 
