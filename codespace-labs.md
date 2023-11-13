@@ -243,7 +243,7 @@ helm install sample .
 ```
 
 You will see some output like this:
-```
+~~~text
 NAME: sample
 LAST DEPLOYED: <date/time>
 NAMESPACE: default
@@ -254,7 +254,7 @@ NOTES:
   export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=sample-chart,app.kubernetes.io/instance=sample" -o jsonpath="{.items[0].metadata.name}")
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace default port-forward $POD_NAME 8080:80
-```
+~~~
 
 7.  If you do a helm list command, you'll see that the chart was deployed in the "default" namespace (alongside our chart-museum one) and note that it is release version 1. You can also see the Kubernetes objects that were deployed in the default namespace for this.
 
