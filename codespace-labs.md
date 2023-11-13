@@ -332,9 +332,11 @@ helm list -n roar
 ```
 
 You should see output like the following:
+
+`
 NAME    NAMESPACE       REVISION        UPDATED                                STATUS   CHART           APP VERSION
 roar    roar            1               2022-06-20 21:21:47.8781047 -0400 EDT  deployed roar-web-0.1.0
-
+`
  
 Now look at the resources that are installed in the namespace.
 
