@@ -727,9 +727,11 @@ helm install --dry-run foo . | grep image -n3
 
 Notice that this time it worked.  Also notice that the value was passed down from the parent project.
 
-13. Finally let's try deploying a running test instance of our application and a running instance of the prod version of our application. (
+13. Finally let's try deploying a running test instance of our application and a running instance of the prod version of our application. (You'll need to delete existing namespaces before you create the new ones to have enough resources in the codespace.)
 
 ```
+k delete ns roar
+k delete ns roar2
 k create ns roar-prod
 helm install --set roar-db.stage=PROD roar-prod -n roar-prod . 
 k create ns roar-test
