@@ -465,7 +465,7 @@ You should see the various database pieces in the cluster now.
 1. Let's suppose we want to create a helm deployment passing in a test database. We're going to change our dependency to be an actual copy of the chart so we can work with it more easily. 
 
 ```
-cd ~/helm-ws/roar-web (if not already there)
+cd /workspaces/helm-fun-v2/roar-web (if not already there)
 rm -rf charts/* 
 cp -R ../roar-db  charts/
 ```
