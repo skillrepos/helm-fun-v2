@@ -170,11 +170,11 @@ You should see it listed as a NodePort now with 31000 as the exposed port.
 12. You need to port-forward again. For convenience, there's also a simple script you can run to do this, passing in the new port.
 
 ```
-extra/cm-port.sh 31000
+extra/cm-port.sh 31000 &
 ```
 OR
 ```
-k port-forward svc/local-chartmuseum 31000:8080
+k port-forward svc/local-chartmuseum 31000:8080 &
 ```
 
 13. After executing this command, you'll see a popup in the lower right with a button to click on to see Chartmuseum running. (If the dialog goes away, you can click on the *PORTS* tab in the top "tab" line of the terminal, find the row with "8080" in the *Port* column, and click on that to open it up in a browser.)	
@@ -371,20 +371,22 @@ Look for the NodePort setting in the service output (should be a number > 30000 
 8. Notice that we see our webapp, but there is no data in the table.  This is because we don't have our database deployed and being pulled in. We have a database chart and resources on our local system. Let's see how to get it pulled in as a dependency.  First, change into the directory for the database pieces.  Again, you can look at any files of interest in there.
 
 ```
-cd ~/helm-ws/roar-db
-cat <files of interest>
+cd /workspaces/helm-fun-v2/roar-db
+cat <files of interest> or open them up via clicking on them in the file list
 ```
 
-8. We want to package this up so it can be used as a dependency for our web chart. Go ahead and run the command to package it up. You should be in the roar-db subdirectory still.
+9. We want to package this up so it can be used as a dependency for our web chart. Go ahead and run the command to package it up. You should be in the roar-db subdirectory still.
 
 ```
 helm package . 
 ```
 
 For output, you should see something like this:
+```
 Successfully packaged chart and saved it to: /home/diyuser3/helm-ws/roar-db/roar-db-0.1.0.tgz
+```
 
-9. Upload the newly created package to our ChartMuseum instance. (This command is also in the file commands.txt in the extra subdirectory -   ~/helm-ws/extra/commands.txt )
+10. Upload the newly created package to our ChartMuseum instance. (This command is also in the file commands.txt in the extra subdirectory -   ~/helm-ws/extra/commands.txt )
 
 ```
 curl --data-binary "@roar-db-0.1.0.tgz" http://localhost:31000/api/charts
@@ -393,24 +395,26 @@ When done, you should see output like this:
 
 {"saved":true}
 
-10. Now that we have this package stored in our chart repository, we can add it as a dependency into our webapp's chart so it will have data to display.  To do that, we add it to the Chart.yaml file.  We have a before and after version of the file. Diff the two files with the code diff tool to see the differences.
+11. Now that we have this package stored in our chart repository, we can add it as a dependency into our webapp's chart so it will have data to display.  To do that, we add it to the Chart.yaml file.  We have a before and after version of the file. Diff the two files with the code diff tool to see the differences.
 
 ```
 cd /workspaces/helm-fun-v2/roar-web
 code -d ../extra/Chart.yaml Chart.yaml
 ```
 
-11. Now we'll update our Chart.yaml file with the needed changes.  To save trying to get the yaml all correct in a regular editor, we’ll just use the diff tool’s merging ability. In the diff window, between the two files, click the arrow that points right to replace the code in our roar-web/Chart.yaml file with the new code from extra/Chart.yaml.  (In the figure below, this is the arrow that is circled and labelled "1".) After that, the files should be identical and you can close the diff window (circled "2" in the figure below).
+12. Now we'll update our Chart.yaml file with the needed changes.  To save trying to get the yaml all correct in a regular editor, we’ll just use the diff tool’s merging ability. In the diff window, between the two files, click the arrow that points right to replace the code in our roar-web/Chart.yaml file with the new code from extra/Chart.yaml.  (In the figure below, this is the arrow that is circled and labelled "1".) After that, the files should be identical and you can close the diff window (circled "2" in the figure below).
 
 ![Diff and merge in code](./images/helmfun11.png?raw=true "Diffing and merging for dependent chart")
 
 	
-12. Now, update your dependencies.
+13. Now, update your dependencies.
 
 ```
 helm dep up
 ```
+
 You should see output like this as Helm gets your new dependency:
+```
 Hang tight while we grab the latest from your chart repositories...
 ...Successfully got an update from the "local" chart repository
 ...Successfully got an update from the "cm" chart repository
@@ -419,8 +423,9 @@ Update Complete. ⎈Happy Helming!⎈
 Saving 1 charts
 Downloading roar-db from repo http://localhost:31000
 Deleting outdated charts
+```
 
-13.  If you look at the directory structure now, you'll have a new "charts" directory where the tgz file will be. With our new dependency in place, let's remind ourselves what is out there now and then go ahead and upgrade our webapp release.
+14.  If you look at the directory structure now, you'll have a new "charts" directory where the tgz file will be. With our new dependency in place, let's remind ourselves what is out there now and then go ahead and upgrade our webapp release.
 
 ```
 ls charts
@@ -429,7 +434,7 @@ k get all -n roar
 helm upgrade -n roar roar  .  --recreate-pods (ignore the warning here)
 ```
 
-14. Take a look at what we have out there now for this release.
+15. Take a look at what we have out there now for this release.
 
 ```
 helm list -n roar
@@ -438,13 +443,13 @@ k get all -n roar
 
 You should see the various database pieces in the cluster now.
 
-15.  Stop the roar-port.sh command that is running and start it again to pick  up the new pod.
+16.  Stop the roar-port.sh command that is running and start it again to pick  up the new pod.
 
 ```
 ../extra/roar-port.sh roar <nodeport from step 4>   
 ```
 
-16. Finally, refresh the webapp in your browser and you should see data being displayed.  
+17. Finally, refresh the webapp in your browser and you should see data being displayed.  
 
 <p align="center">
 **[END OF LAB]**
