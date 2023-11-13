@@ -443,13 +443,15 @@ k get all -n roar
 
 You should see the various database pieces in the cluster now.
 
-16.  Stop the roar-port.sh command that is running and start it again to pick  up the new pod.
+16.  The roar-port.sh command will likely have stopped.  Run it again to pick up the new pod.
 
 ```
 ../extra/roar-port.sh roar <nodeport from step 4>   
 ```
 
-17. Finally, refresh the webapp in your browser and you should see data being displayed.  
+17. Finally, refresh the webapp in your browser and you should see data being displayed.
+
+![App with data](./images/helmfun18.png?raw=true "App with data")
 
 <p align="center">
 **[END OF LAB]**
