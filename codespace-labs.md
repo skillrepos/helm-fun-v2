@@ -664,11 +664,11 @@ code -d  ../extra/deployment6-1.yaml charts/roar-db/templates/deployment.yaml
 
 6. Do a dry-run to make sure the image comes out as expected.   To simplify seeing the change, we'll grep for image with a few lines of context (from the roar-web2 subdir).
 
-(This next command is also in the file commands.txt in the extra subdirectory - ~/helm-ws/extra/commands.txt )
-
 ```
 helm install --set roar-db.stage=TEST --dry-run foo . | grep image -n3
+```
 	You should see output like the following:
+```
 65-    spec:
 66-      containers:
 67-      - name: roar-db
@@ -688,7 +688,7 @@ helm install --set roar-db.stage=test --dry-run foo . | grep image -n3
 
 This is not what we want.   Let's make our arguments case-insensitive.  To do this, we'll pipe the value we pass in through a pipeline and to another template function called "upper" to upper-case it first.
 
-7. Use the diff and merge functionality to merge in changes from ../extra/deployment6-2.yaml as done previously.
+8. Use the diff and merge functionality to merge in changes from ../extra/deployment6-2.yaml as done previously.
 
 ```
 code -d ../extra/deployment6-2.yaml charts/roar-db/templates/deployment.yaml ../extra/deployment6-2.yaml
@@ -696,13 +696,13 @@ code -d ../extra/deployment6-2.yaml charts/roar-db/templates/deployment.yaml ../
 
 ![Diff and merge in upper-case handling code](./images/helmfun16.png?raw=true "Diffing and merging for adding upper-case handling code")
  
-8. Try running the command with the lower-case setting again. This time it should work.
+9. Try running the command with the lower-case setting again. This time it should work.
 
 ```
 helm install --set roar-db.stage=test --dry-run foo . | grep image -n3
 ```
 
-9. What happens if we don't pass in a setting for stage?  Try it and see.
+10. What happens if we don't pass in a setting for stage?  Try it and see.
 
 ```
 helm install --dry-run foo . | grep image -n3
@@ -710,7 +710,7 @@ helm install --dry-run foo . | grep image -n3
 
 We get an error because we don't have any value set and one of our functions fails because it doesn't have the correct type to compare.
 
-10. We'd rather have a default that works.  Let's set one up in the values.yaml of the parent project that will be passed in to the child project. Use the diff and merge functionality to merge in changes from ../extra/values6-2.yaml as done previously.
+11. We'd rather have a default that works.  Let's set one up in the values.yaml of the parent project that will be passed in to the child project. Use the diff and merge functionality to merge in changes from ../extra/values6-2.yaml as done previously.
 
 ```
 code -d ../extra/values6-2.yaml values.yaml
@@ -719,7 +719,7 @@ code -d ../extra/values6-2.yaml values.yaml
 ![Diff and merge in defaults code](./images/helmfun17.png?raw=true "Diffing and merging for adding defaults")
 
   
-11.	Now try running the same command as you did in step 8. 
+12.	Now try running the same command as you did in step 8. 
 
 ```
 helm install --dry-run foo . | grep image -n3
@@ -727,7 +727,7 @@ helm install --dry-run foo . | grep image -n3
 
 Notice that this time it worked.  Also notice that the value was passed down from the parent project.
 
-12. Finally let's try deploying a running test instance of our application and a running instance of the prod version of our application. (
+13. Finally let's try deploying a running test instance of our application and a running instance of the prod version of our application. (
 
 ```
 k create ns roar-prod
@@ -736,7 +736,7 @@ k create ns roar-test
 helm install --set roar-db.stage=TEST roar-test -n roar-test .
 ```
 
-13. Now, you can get the NodePort for both versions, and open them in a browser to see the results.
+14. Now, you can get the NodePort for both versions, and open them in a browser to see the results.
 
 ```    
 k get svc -n roar-prod | grep web
@@ -745,7 +745,7 @@ k get svc -n roar-test | grep web
 ../extra/roar-port.sh roar-test <nodeport for test> (if not running in vm)
 ```
 
-14. As a reminder, the port numbers that are > 30000 are the ones you want.  You can open each of them in a browser as done before and view the different instance.
+15. As a reminder, the port numbers that are > 30000 are the ones you want.  You can open each of them in a browser as done before and view the different instance.
 
 <p align="center">
 **[END OF LAB]**
