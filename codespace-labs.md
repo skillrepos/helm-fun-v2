@@ -510,7 +510,7 @@ code -d ../extra/values5-1.yaml charts/roar-db/values.yaml
  
 7.  Now we'll update our values.yaml file with the needed changes.  To save trying to get the yaml all correct in a regular editor, we’ll just use the diff tool’s merging ability. In the diff window, between the two files, click the arrow that points right to replace the code in our values.yaml file with the new code from extra/values5-1.yaml.  (In the figure below, this is the arrow that is circled and labelled "1".) After that, the files should be identical and you can close the diff window (circled "2" in the figure below).
 
-![Diff and merge in code](./images/helmfun12.png?raw=true "Diffing and merging for adding templating")
+![Diff and merge in code](./images/helmfun13.png?raw=true "Diffing and merging for adding templating")
 
  
 8. After completing the merge, run the lint check again.  
