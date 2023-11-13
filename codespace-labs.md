@@ -740,9 +740,9 @@ helm install --set roar-db.stage=TEST roar-test -n roar-test .
 
 ```    
 k get svc -n roar-prod | grep web
-../extra/roar-port.sh roar-prod <nodeport for prod> (if not running in vm)
+../extra/roar-port.sh roar-prod <nodeport for prod> 
 k get svc -n roar-test | grep web
-../extra/roar-port.sh roar-test <nodeport for test> (if not running in vm)
+../extra/roar-port.sh roar-test <nodeport for test> 
 ```
 
 15. As a reminder, the port numbers that are > 30000 are the ones you want.  You can open each of them in a browser as done before and view the different instance.
