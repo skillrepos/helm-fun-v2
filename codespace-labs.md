@@ -691,7 +691,7 @@ This is not what we want.   Let's make our arguments case-insensitive.  To do th
 8. Use the diff and merge functionality to merge in changes from ../extra/deployment6-2.yaml as done previously.
 
 ```
-code -d ../extra/deployment6-2.yaml charts/roar-db/templates/deployment.yaml ../extra/deployment6-2.yaml
+code -d ../extra/deployment6-2.yaml charts/roar-db/templates/deployment.yaml 
 ```
 
 ![Diff and merge in upper-case handling code](./images/helmfun16.png?raw=true "Diffing and merging for adding upper-case handling code")
