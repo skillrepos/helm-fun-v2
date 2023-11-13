@@ -6,7 +6,7 @@ These steps **must** be completed prior to starting the actual labs.
 
 ## Create your own repository for these labs
 
-- Ensure that you have created a repository by forking the [skillrepos/helm-fun-v2](https://github.com/skillrepos/helm-fun-v2) project as a template into your own GitHub area.
+- Create your own copy of this repository by forking the [skillrepos/helm-fun-v2](https://github.com/skillrepos/helm-fun-v2) project as a template into your own GitHub area.
 - You do this by clicking the `Fork` button in the upper right portion of the main project page and following the steps to create a copy in **your-github-userid/helm-fun-v2** .  **Make sure to uncheck the "only the main branch" checkbox as shown below.**
 
 ![Forking repository](./images/helmfun1.png?raw=true "Forking the repository")
@@ -55,15 +55,6 @@ These steps **must** be completed prior to starting the actual labs.
 🌟  Enabled addons: default-storageclass, storage-provisioner
 🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
 ```
-
-  ```console
-   💡  registry is an addon maintained by Google. For any concerns contact minikube on GitHub.
-   You can view the list of minikube maintainers at: https://github.com/kubernetes/minikube/blob/master/OWNERS
-    ▪ Using image gcr.io/google_containers/kube-registry-proxy:0.4
-    ▪ Using image docker.io/registry:2.8.1
-   🔎  Verifying registry addon...
-   🌟  The 'registry' addon is enabled
-  ```
 
 
 ## Labs
