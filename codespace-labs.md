@@ -626,7 +626,7 @@ cd roar-web2
 2. For switching between the prod and test database, we'll add two different versions of the image to choose from - one for prod and one for test.  Edit and modify the charts/roar-db/values.yaml file and add the following values. (For reference, or if you're concerned about the typing, in the ~/helm-fun-v2/extra folder, there is a values.yaml with the code already in it.) You can save and close the editor afterwards.
 
 ```   
-code -d ../extra/values6-1.yml charts/roar-db/values.yaml 
+code -d ../extra/values6-1.yaml charts/roar-db/values.yaml 
 ```
 
 3. Now we'll update our values.yaml file with the needed changes.  To save trying to get the yaml all correct in a regular editor, we’ll just use the diff tool’s merging ability. In the diff window, between the two files, click the arrow that points right to replace the code in our values.yaml file with the new code from extra/values6-1.yaml.  (In the figure below, this is the arrow that is circled and labelled "1".) After that, the files should be identical and you can close the diff window (circled "2" in the figure below).
