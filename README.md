@@ -4,9 +4,9 @@ These instructions will guide you through configuring a GitHub Codespaces enviro
 
 These steps **must** be completed prior to starting the actual labs.
 
-## 1. To create your working environment for the labs, you may **use either of the options below:** 
+## Step 1. To create your working environment for the labs, you may **use either of the options below:** 
 <br/><br/>
-## Option 1 - _Use if you just want a quick start without a fork of the repo_
+## Option A - _Use if you just want a quick start without a fork of the repo_
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Create a codespace without a repository to commit to by clicking on the button below:**
 
@@ -22,7 +22,7 @@ These steps **must** be completed prior to starting the actual labs.
 
 <br/><br/>
 
-## Option 2 - _Use if you want a forked copy of the repository to update with your changes_
+## Option B - _Use if you want a forked copy of the repository to update with your changes_
 
 
 ## Create your own repository for these labs
@@ -45,7 +45,7 @@ These steps **must** be completed prior to starting the actual labs.
 ![Starting codespace](./images/helmfun3.png?raw=true "Starting your codespace")
 
 
-## Start the Kubernetes cluster and complete setup
+## Step 2. Start the Kubernetes cluster and complete setup
 
 2. Setup an alias and run the setup command in the codespace's terminal (**This will take several minutes to run...**):
 
@@ -78,7 +78,7 @@ These steps **must** be completed prior to starting the actual labs.
 ```
 
 
-## Labs
+## Step 3. Open Labs
 
 3. After the codespace has started, open the labs document by going to the file tree on the left, find the file named **codespace-labs.md**, right-click on it, and open it with the **Preview** option.)
 
