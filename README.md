@@ -4,7 +4,7 @@ These instructions will guide you through configuring a GitHub Codespaces enviro
 
 These steps **must** be completed prior to starting the actual labs.
 
-## Step 1. To create your working environment for the labs, create a codespace by clicking on the button below:** 
+## Step 1. To create your working environment for the labs, create a codespace by clicking on the button below:
 <br/><br/>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/skillrepos/helm-fun-v2?quickstart=1)
