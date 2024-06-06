@@ -23,10 +23,9 @@ Then click on the option to create a new codespace.
 
 ## Step 2. Start the Kubernetes cluster and complete setup
 
-2. Setup an alias and run the setup command in the codespace's terminal (**This will take several minutes to run...**):
+2. Start your Kubernetes cluster using minikube in the codespace's terminal (**This will take several minutes to run...**):
 
       ```
-      alias k=kubectl
       minikube start
       ```
 
