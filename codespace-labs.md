@@ -624,7 +624,7 @@ cp -R roar-web roar-web2
 cd roar-web2
 ```
 
-2. For switching between the prod and test database, we'll add two different versions of the image to choose from - one for prod and one for test.  Edit and modify the charts/roar-db/values.yaml file and add the following values. (For reference, or if you're concerned about the typing, in the ~/helm-fun-v2/extra folder, there is a values.yaml with the code already in it.) You can save and close the editor afterwards.
+2. For switching between the prod and test database, we'll add two different versions of the image to choose from - one for prod and one for test. Edit and modify the charts/roar-db/values.yaml file and update the values via the same diffing/merge process we've used before. Here's the command to bring up the diff.
 
 ```   
 code -d ../extra/values6-1.yaml charts/roar-db/values.yaml 
@@ -743,9 +743,9 @@ helm install --set roar-db.stage=TEST roar-test -n roar-test .
 
 ```    
 k get svc -n roar-prod | grep web
-../extra/roar-port.sh roar-prod <nodeport for prod> 
+../extra/roar-port.sh roar-prod <nodeport for prod> &
 k get svc -n roar-test | grep web
-../extra/roar-port.sh roar-test <nodeport for test> 
+../extra/roar-port.sh roar-test <nodeport for test> &
 ```
 
 15. As a reminder, the port numbers that are > 30000 are the ones you want.  You can open each of them in a browser as done before and view the different instance.
