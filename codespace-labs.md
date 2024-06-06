@@ -95,7 +95,7 @@ k port-forward svc/local-chartmuseum-chartmuseum 8080:8080
 <p align="center">
 **[END OF LAB]**
 </p>
- 
+</br></br> 
 
 **Lab 2:  Changing values**
 
@@ -105,9 +105,8 @@ k port-forward svc/local-chartmuseum-chartmuseum 8080:8080
 
 ![Opening split screen](./images/helmfun7.png?raw=true "Opening split screen")
 
-2. The service that runs in the Kubernetes cluster for ChartMuseum is defaulted to be of type "ClusterIP" - mainly intended for traffic internal to the cluster. To see that, in the second terminal window, set the alias, and run the command to get the service info for the namespace where ChartMuseum is running.  
+2. The service that runs in the Kubernetes cluster for ChartMuseum is defaulted to be of type "ClusterIP" - mainly intended for traffic internal to the cluster. To see that, in the second terminal window, run the command to get the service info for the namespace where ChartMuseum is running.  
 ```
-alias k=kubectl
 k get svc
 ```
 Notice the output indicating the type of service is ClusterIP.
@@ -194,6 +193,7 @@ helm repo list
 <p align="center">
 **[END OF LAB]**
 </p>
+</br></br>
 
 **Lab 3: Creating a Helm Chart**
 
@@ -293,6 +293,7 @@ k delete pod/<sample-pod-name>
 <p align="center">
 **[END OF LAB]**
 </p>
+</br></br>
 
 **Lab 4: Charts and Dependencies**
 **Purpose:  In this lab, we’ll deploy the chart for our sample webapp, and then see how to add another chart as a dependency for its database.**
