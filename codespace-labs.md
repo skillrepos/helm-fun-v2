@@ -1,11 +1,10 @@
 # Helm Fundamentals
 ## Deploying, upgrading, and rolling back applications in Kubernetes
 
-## Revision 1.1 - 11/12/23
+## Revision 1.2 - 06/06/24
 
 **Startup IF NOT ALREADY DONE!**
 ```
-alias k=kubectl
 minikube start
 ```
 
@@ -39,7 +38,7 @@ helm repo list
 ```
 helm search repo stable
 ```
-(What do you notice about all the charts here?)
+(What do you notice about most of the charts here?)
 ```
 helm search repo cm
 ```
@@ -84,7 +83,7 @@ k get svc
 k port-forward svc/local-chartmuseum-chartmuseum 8080:8080
 ```
 
-11.  After executing this command, you'll see a popup in the lower right with a button to click on to see Chartmuseum running. (If the dialog goes away, you can click on the *PORTS* tab in the top "tab" line of the terminal, find the row with "8080" in the *Port* column, and click on that to open it up in a browser.)	
+11.  After executing this command, you'll see a popup in the lower right with a button to click on to see Chartmuseum running. Click on that. (If the dialog goes away, you can click on the *PORTS* tab in the top "tab" line of the terminal, find the row with "8080" in the *Port* column, and click on that to open it up in a browser.)	
 
 ![Opening app via dialog](./images/helmfun5.png?raw=true "Opening app via dialog")
    
