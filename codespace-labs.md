@@ -298,11 +298,10 @@ k delete pod/<sample-pod-name>
 **Lab 4: Charts and Dependencies**
 **Purpose:  In this lab, we’ll deploy the chart for our sample webapp, and then see how to add another chart as a dependency for its database.**
 
-1. Go to the main directory for our helm work and switch to the quay.io branch.  You can optionally look at any of the files you're interested in.
+1. Go to the main directory for our helm work and switch to the quay.io branch.  You can optionally look at any of the files you're interested in. (Ignore any popups about rebuilding the container.)
 
 ```
 cd /workspaces/helm-fun-v2
-git stash
 git checkout quay.io
 cat <files of interest>
 ```
@@ -368,7 +367,7 @@ Look for the NodePort setting in the service output (should be a number > 30000 
 ![Opening app in browser](./images/helmfun10.png?raw=true "Opening app in browser")
 
 
-8. Notice that we see our webapp, but there is no data in the table.  This is because we don't have our database deployed and being pulled in. We have a database chart and resources on our local system. Let's see how to get it pulled in as a dependency.  First, change into the directory for the database pieces.  Again, you can look at any files of interest in there.
+8. Notice that we see our webapp, but there is no data in the table.  This is because we don't have our database deployed and being pulled in. We have a database chart and resources on our local system. Let's see how to get it pulled in as a dependency.  First, switch to the terminal that is not running the port forward.  Then change into the directory for the database pieces.  Again, you can look at any files of interest in there.
 
 ```
 cd /workspaces/helm-fun-v2/roar-db
@@ -446,7 +445,7 @@ You should see the various database pieces in the cluster now.
 16.  The roar-port.sh command will likely have stopped.  Run it again to pick up the new pod.
 
 ```
-../extra/roar-port.sh roar <nodeport from step 4>   
+../extra/roar-port.sh roar <nodeport from step 4>  & 
 ```
 
 17. Finally, refresh the webapp in your browser and you should see data being displayed.
@@ -456,7 +455,7 @@ You should see the various database pieces in the cluster now.
 <p align="center">
 **[END OF LAB]**
 </p> 
-
+</br></br>
 
 **Lab 5: Templating**
 
@@ -542,14 +541,14 @@ Find the NodePort value (will be > 30000)
 ../extra/roar-port.sh roar2 <nodeport>  &  
 ```
 
-12. After executing this command, you'll see a popup in the lower right with a button to click on to see the application running. (If the dialog goes away, you can click on the *PORTS* tab in the top "tab" line of the terminal, find the row with the node port in the *Port* column, and click on that to open it up in a browser.)	
+12. After executing this command, you'll see a popup in the lower right with a button to click on to see the application running. Click on that. (If the dialog goes away, you can click on the *PORTS* tab in the top "tab" line of the terminal, find the row with the node port in the *Port* column, and click on that to open it up in a browser.)	
 
 ![Opening app via dialog](./images/helmfun9.png?raw=true "Opening app via dialog")
    
 
 13. After this, you should get a browser tab with the web server running. To see the application running, add "/roar/" to the end of the URL.  **Make sure to include the trailing slash in /roar/**
 
-![Opening app in browser](./images/helmfun10.png?raw=true "Opening app in browser")
+![Opening app in browser](./images/helmfun18.png?raw=true "Opening app in browser")
 
 14. Let's suppose we want to overwrite the image used here to be one that is for a test database. The image for the test database is on the quay.io hub at *quay.io/bclaster/roar-db-test:v4* . We could use a long command line string such as this to set it and use the template command to show the rendered files.  In the roar-web subdirectory, run the commands below to see the difference. 
 
@@ -582,7 +581,7 @@ roar-db:
 k get pods -n roar2 --watch
 ```
 
-17. Finally, let's do an upgrade using the new values file.  In a separate terminal window from the one where you did step 14, execute the following commands (this assumes you're still in the `roar-web` subdir):
+17. Finally, let's do an upgrade using the new values file.  In a separate terminal window from the one where you did step 16, execute the following commands (this assumes you're still in the `roar-web` subdir):
 
 ```
 helm upgrade -n roar2 roar2 . -f test-db.yaml --recreate-pods
@@ -590,10 +589,12 @@ helm upgrade -n roar2 roar2 . -f test-db.yaml --recreate-pods
 
 Watch the changes happening to the pods in the terminal window with the watch running.
 
-18. Run the roar-port.sh command to do the port forward again. (It may be a minute before the other one stops.)  Note that this is specifying the "roar2" namespace, not the "roar" one.
+18. Run the roar-port.sh command to do the port forward again. (It may be a minute before the other one stops.)  Note that this is specifying the "roar2" namespace, not the "roar" one. (You can find the <nodeport> value by the 'k get svc -n roar2 | grep web' command.)
 
 ```
-../extra/roar-port.sh roar2 <nodeport>   
+k get svc -n roar2 | grep web
+
+../extra/roar-port.sh roar2 <nodeport> &  
 ```
  
 19. Go back to your browser and refresh it.  You should see a version of the (TEST) data in use now. (Depending on how quickly you refresh, you may need to refresh more than once.)
@@ -609,9 +610,9 @@ Ctrl-C
 <p align="center">
 **[END OF LAB]**
 </p>
+</br></br>
 
-
-**Lab 6: Using Functions and Pipelines**
+**Lab 6: (Optional/Extra) Using Functions and Pipelines**
 
 **Purpose: In this lab, we'll see how to use functions and pipelines to expand what we can do in Helm charts.**
 
@@ -754,5 +755,5 @@ k get svc -n roar-test | grep web
 </p>
 
 <p align="center">
-(c) 2023 Brent Laster and Tech Skills Transformations
+(c) 2024 Brent Laster and Tech Skills Transformations
 </p>
