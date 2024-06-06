@@ -4,6 +4,27 @@ These instructions will guide you through configuring a GitHub Codespaces enviro
 
 These steps **must** be completed prior to starting the actual labs.
 
+## 1. To create your working environment for the labs, you may **use either of the options below:** 
+<br/><br/>
+## Option 1 - _Use if you just want a quick start without a fork of the repo_
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Create a codespace without a repository to commit to by clicking on the button below:**
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/skillrepos/helm-fun-v2?quickstart=1)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Then click on the option to create a new workspace.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![Creating new codespace from button](./images/helmfun20.png?raw=true "Creating new codespace from button")
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**This will run for several minutes while it gets everything ready.**
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- After the codespace has initialized there will be a terminal present.
+
+<br/><br/>
+
+## Option 2 - _Use if you want a forked copy of the repository to update with your changes_
+
+
 ## Create your own repository for these labs
 
 - Create your own copy of this repository by forking the [skillrepos/helm-fun-v2](https://github.com/skillrepos/helm-fun-v2) project as a template into your own GitHub area.
