@@ -5,5 +5,7 @@
     "memory": "8gb",
     "storage": "32gb"
   },
-  "postCreateCommand": "echo alias k=kubectl >> ~/.bash_aliases && minikube start"
+  "postStartCommand": ["minikube", "start"],
+  "postCreateCommand": "echo alias k=kubectl >> ~/.bash_aliases",
+  
 }
