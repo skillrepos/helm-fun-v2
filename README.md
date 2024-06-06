@@ -54,7 +54,8 @@ Then click on the option to create a new codespace.
 ```
 
 
-## Step 3. Open Labs
+<br/><br/>
+## Step 3. Open the labs document
 
 3. After the codespace has started, open the labs document by going to the file tree on the left, find the file named **codespace-labs.md**, right-click on it, and open it with the **Preview** option.)
 
